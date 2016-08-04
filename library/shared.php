@@ -51,13 +51,29 @@ function callHook(){
 	array_shift($urlArray);
 	$queryString = $urlArray;
 /*创建controller,model对象
-	controller规则：itemsController
-	model规则：Item
+	*controller规则：itemsController
+	*model规则：Item
 */
 	$controllerName = $controller;
 	$controller = ucwords($controller);
 	$model = rtrim($controller,'s');
 	$controller .= 'Controller';
-	
-	
+	$dispatch = new $controller($model,$controllerName,$action);
+	if(int(method_exists($controller,$action)){
+		call_user_func_array(array($dispatch,$action),$queryString);
+	}else{
+		
+	}
+}
+/** 自动加载需要的类 **/
+function __autoload($className){
+	if(file_exists(ROOT.DS.'library' . DS . strtolower($className).'.class.php')){
+		 require_once(ROOT . DS . 'library' . DS . strtolower($className) . '.class.php');
+	} else if (file_exists(ROOT . DS . 'application' . DS . 'controllers' . DS . strtolower($className) . '.php')) {
+		require_once(ROOT . DS . 'application' . DS . 'controllers' . DS . strtolower($className) . '.php');
+	} else if (file_exists(ROOT . DS . 'application' . DS . 'models' . DS . strtolower($className) . '.php')) {
+		require_once(ROOT . DS . 'application' . DS . 'models' . DS . strtolower($className) . '.php');
+	} else {
+		/* Error Generation Code Here */
+	}
 }
